@@ -14,14 +14,14 @@ typedef struct queue* queuepointer;
 typedef struct queue{
     element data;
     queuepointer link;
-}
+}queue;
 queuepointer front=NULL,rear;
 element queueEmpty(){
     printf("queue is empty\n");
     element item;
-    item.data=-1;
-    item.left=NULL;
-    item.right=NULL;
+    item.node.data=-1;
+    item.node.left=NULL;
+    item.node.right=NULL;
     return item;
 }
 void addq(element item){
@@ -49,44 +49,55 @@ element deleteq(){
 }
 int main(){
     int i,j;
-    char c=getc();
+    char c;
+    c=getc(stdin);
     if(c=='['){
-        c=getc();
+        c=getc(stdin);
         if(c=='0'){
-            c=getc();
+            c=getc(stdin);
             struct TreeNode root;
-            addq(root);
+            element Root;
+            Root.node=root;
+            addq(Root);
         }
         while(front!=rear){
             struct TreeNode current;
-            current=deleteq();
+            element Current;
+            Current.node=current;
+            Current=deleteq();
             if(c==']'){
                 break;
             }
-            c=getc();
+            c=getc(stdin);
             if(c=='0'){
                 struct TreeNode newnode;
-                current.left=&newnode;
-                addq(newnode);
+                element Newnode;
+                Newnode.node=newnode;
+                Current.node.left=&newnode;
+                addq(Newnode);
             }
             else{
-                current.left=NULL;
+                Current.node.left=NULL;
                 scanf("%*[ull]");
             }
-            getc();//吃','
-            c=getc();
+            getc(stdin);//吃','
+            c=getc(stdin);
             if(c=='0'){
                 struct TreeNode newnode;
-                current.right=&newnode;
-                addq(newnode);
+                element Newnode;
+                Newnode.node=newnode;
+                Current.node.right=&newnode;
+                addq(Newnode);
             }
             else{
-                current.right=NULL;
+                Current.node.right=NULL;
                 scanf("%*[ull]");
             }
             c=getc();//eat ','or']'
-        }
+        }//-----------------------------------------------完成樹
+        printf("tree finish\n");
     }
+
     else{//輸入非以[開頭
         printf("input error\n");
     }
