@@ -47,12 +47,38 @@ node deleteq(){
     free(temp);
     return item;
 }
+int min(int a, int b) {
+  if (a<b)
+    return a;
+  else
+    return b;
+}
+/*int find(node* t1,node* t2){
+    t1->data=1;
+    t2->data=2;
+    int t1min,leftmin,rightmin;
+    if(t1->right){
+        node*now=t1->right;
+        int min=min(min());
+        t1nax=min(min(find(now,now->left),find(now,now->right)),1+find(now->left,now->left));
+    }
+    if(t2->left){
+        t2->left->data=1;
+    }
+    if(t2->right){
+        t2->right->data=1;
+    }
+    return 1+t1min+leftmin+rightmin;
+}*/
+
 
 
 int main(){
     int i,j;
     char c;
+    node* Root;
     c=getc(stdin);
+
     //printf("[: %c\n",c);
     if(c=='['){//開始建立樹
         //printf("[: %c\n",c);
@@ -61,6 +87,7 @@ int main(){
             //printf("0: %c\n",c);
             c=getc(stdin);
             struct TreeNode root;
+            Root = &root;
             addq(root);
         }
         while(front!=rear){
@@ -102,4 +129,13 @@ int main(){
     }
 
     printf("start to find\n");
+    int lleaf,rleaf;
+    /*find(Root,Root->left);
+    find(Root,Root->right);
+    find(Root->left,Root->left->left);
+    find(Root->left,Root->left->right);
+    find(Root->right,Root->right->left);
+    find(Root->right,Root->right->right);*/
+
+
 }
