@@ -4,27 +4,26 @@
 
 struct TreeNode {
      int data;
-     struct node* left;
-     struct node* right;
+     struct TreeNode* left;
+     struct TreeNode* right;
 };
-typedef struct{
-    struct TreeNode node;
-}element;
+typedef struct TreeNode node;
 typedef struct queue* queuepointer;
 typedef struct queue{
-    element data;
+    node data;
     queuepointer link;
 }queue;
 queuepointer front=NULL,rear;
-element queueEmpty(){
+
+node queueEmpty(){
     printf("queue is empty\n");
-    element item;
-    item.node.data=-1;
-    item.node.left=NULL;
-    item.node.right=NULL;
+    node item;
+    item.data=-1;
+    item.left=NULL;
+    item.right=NULL;
     return item;
 }
-void addq(element item){
+void addq(node item){
     queuepointer temp;
     temp=(queuepointer)malloc(sizeof(queue));
     temp->data=item;
@@ -36,9 +35,10 @@ void addq(element item){
         front=temp;
     rear=temp;
 }
-element deleteq(){
+
+node deleteq(){
     queuepointer temp=front;
-    element item;
+    node item;
     if(!temp){
         return queueEmpty();
     }
@@ -47,58 +47,59 @@ element deleteq(){
     free(temp);
     return item;
 }
+
+
 int main(){
     int i,j;
     char c;
     c=getc(stdin);
-    if(c=='['){
-        c=getc(stdin);
+    //printf("[: %c\n",c);
+    if(c=='['){//開始建立樹
+        //printf("[: %c\n",c);
+        c=getc(stdin);//抓根
         if(c=='0'){
+            //printf("0: %c\n",c);
             c=getc(stdin);
             struct TreeNode root;
-            element Root;
-            Root.node=root;
-            addq(Root);
+            addq(root);
         }
         while(front!=rear){
-            struct TreeNode current;
-            element Current;
-            Current.node=current;
-            Current=deleteq();
-            if(c==']'){
+            struct TreeNode current;//現在在幫誰加葉子
+            current=deleteq();
+            if(c==']'){//結束
                 break;
             }
             c=getc(stdin);
             if(c=='0'){
-                struct TreeNode newnode;
-                element Newnode;
-                Newnode.node=newnode;
-                Current.node.left=&newnode;
-                addq(Newnode);
+                //struct TreeNode newnode;//左葉
+                node* newnode;
+                newnode=(node*)malloc(sizeof(node));
+                //current.left=&newnode;
+                current.left=newnode;
+                addq(*newnode);
             }
-            else{
-                Current.node.left=NULL;
-                scanf("%*[ull]");
+            else if(c=='n'){
+                current.left=NULL;
+                scanf("%*[ull]");//吃掉ull
             }
             getc(stdin);//吃','
             c=getc(stdin);
             if(c=='0'){
-                struct TreeNode newnode;
-                element Newnode;
-                Newnode.node=newnode;
-                Current.node.right=&newnode;
-                addq(Newnode);
+                struct TreeNode newnode;//右葉
+                current.right=&newnode;
+                addq(newnode);
             }
             else{
-                Current.node.right=NULL;
+                current.right=NULL;
                 scanf("%*[ull]");
             }
-            c=getc();//eat ','or']'
+            c=getc(stdin);//eat ','or']'
         }//-----------------------------------------------完成樹
-        printf("tree finish\n");
+        printf("bulid tree finish\n");
     }
-
     else{//輸入非以[開頭
         printf("input error\n");
     }
+
+    printf("start to find\n");
 }
