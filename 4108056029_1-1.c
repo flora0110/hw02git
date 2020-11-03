@@ -305,10 +305,11 @@ int main(){
     printf("start to mark\n");
     int min=15001;
     int mark[nownum];
-    int pro[nownum];
+    int p[nownum];
+    //int pro[nownum];
     for(i=0;i<nownum;i++){
         mark[i]=0;
-        pro[i]=0;
+        p[i]=0;
     }
     for(i=0;i<nownum;i++){
         Nodenum minnodenum=minno(i);
@@ -318,13 +319,13 @@ int main(){
 
     int ans=0;
     for(i=nownum-1;i>=0;i--){
-        if(pro[i]==0){//沒被保護
+        if(p[i]==0){//沒被保護
             Nodenum marknode=maxno(i);//-1 插旗 找一個最小代價又可同時保護最多人的店去保護他
             if(marknode.fromnode->data!=-1){//還沒被插旗
                 ans++;
                 marknode.fromnode->data=-1;
             }
-            pro[i]=1;
+            p[i]=1;
         }
     }
 }
