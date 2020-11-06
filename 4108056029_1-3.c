@@ -51,7 +51,7 @@ void dfs(int *temp,int i,int count,int n,int m){
         dfs(temp,i+1,count+1,n,m);
     }
 }
-void testprintf(listpointer x,int n){
+/*void testprintf(listpointer x,int n){
      int k=0;
     while(x){
         int i;
@@ -62,18 +62,17 @@ void testprintf(listpointer x,int n){
         printf("\n");
         x=x->link;
     }
-}
+}*/
 int main(){
     int n,m;
     front=NULL;
     scanf("%d",&n);
     scanf("%d",&m);
     int *temp=(int*)malloc(n*sizeof(int));
-    //int temp[n];
     dfs(temp,0,0,n,m);//把可能性弄完
-    printf("-------------test------------\n");
+    /*printf("-------------test------------\n");
     testprintf(front,n);
-    printf("-----------------------------\n");
+    printf("-----------------------------\n");*/
     int i,j;
     int who,ans=1;//who 說 who ...說ans
     char c;
@@ -86,14 +85,14 @@ int main(){
         for(j=0;j<tatal;j++){//歸零
             narr[j]=0;
         }
-        printf("narrative : %d\n",i);
+        //printf("narrative : %d\n",i);
         tatal=0;
         do{
-            printf("read..\n");
+            //printf("read..\n");
             scanf("%d%c",&who,&c);
             //whoin[who]=1;//這次有在敘述中
             narr[tatal++]=who;
-            printf("%d \n",who );
+            //printf("%d \n",who );
         }while(c=='>');
         scanf("%c",&c );
         if(c=='T'){
@@ -107,14 +106,14 @@ int main(){
             break;
         }
         //ans = (c=='T') 1:-1;
-        printf("ans=%d\n",ans);
+        //printf("ans=%d\n",ans);
         now=front;
         last=front;
         while(now!=NULL){//刪掉不符合敘述的
-            printf("start to delete-------------------\n");
+            /*printf("start to delete-------------------\n");
             printf("-------------test------------\n");
             testprintf(front,n);
-            printf("-----------------------------\n");
+            printf("-----------------------------\n");*/
             test=1;
             /*for(j=0;j<n;j++){//test
                 if(whoin[j]){
@@ -138,9 +137,9 @@ int main(){
             else{
                 last=nowtemp;//更新上一點
             }
-            printf("-------------after delete test------------\n");
+            /*printf("-------------after delete test------------\n");
             testprintf(front,n);
-            printf("-----------------------------\n");
+            printf("-----------------------------\n");*/
         }//-----------------
     }
     printf("output:");
