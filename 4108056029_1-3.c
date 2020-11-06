@@ -6,8 +6,7 @@ typedef struct List{
     int* data;
     listpointer link;
 }list;
-listpointer front=NULL,rear;
-
+listpointer front,rear;
 void addq(int* item){
     listpointer temp=(listpointer)malloc(sizeof(list));
     temp->data=item;
@@ -31,51 +30,99 @@ int* deleteq(){
     }
 }
 void dfs(int *temp,int i,int count,int n,int m){
+    int j;
     if(i==n){
         if(m!=count){
             return;
         }
-        addq(temp);
-        //test-------------------
-        int j;
-        printf("________test__________\n");
+        int *item=(int*)malloc(n*sizeof(int));//小心指標會一起改
         for(j=0;j<n;j++){
-            printf("%d ",rear->data[j]);
+            item[j]=temp[j];
         }
-        printf("\n");
-        //---------------------------------
+        addq(item);
         return;
     }
     temp[i]=1;
+
     dfs(temp,i+1,count,n,m);
+
     if(count!=m){//說謊的人還沒滿
         temp[i]=-1;
         dfs(temp,i+1,count+1,n,m);
     }
 }
+void testprintf(listpointer x,int n){
+     int k=0;
+    while(x){
+        int i;
+        printf("list %d\n",k++);
+        for(i=0;i<n;i++){
+            printf("%d \n",x->data[i]);
+        }
+        printf("\n");
+        x=x->link;
+    }
+}
 int main(){
     int n,m;
+    front=NULL;
     scanf("%d",&n);
     scanf("%d",&m);
     int *temp=(int*)malloc(n*sizeof(int));
+    //int temp[n];
     dfs(temp,0,0,n,m);//把可能性弄完
+    printf("-------------test------------\n");
+    testprintf(front,n);
+    printf("-----------------------------\n");
     int i,j;
-    int who,ans;//who 說 who ...說ans
+    int who,ans=1;//who 說 who ...說ans
     char c;
+    //int whoin[n];
+    int narr[600];
+    int tatal=0;
     listpointer now,nowtemp,last;
     int test=1;
     for(i=0;i<n;i++){//輸入敘述
-        printf("narrative\n", );
+        for(j=0;j<tatal;j++){//歸零
+            narr[j]=0;
+        }
+        printf("narrative : %d\n",i);
+        tatal=0;
         do{
+            printf("read..\n");
             scanf("%d%c",&who,&c);
+            //whoin[who]=1;//這次有在敘述中
+            narr[tatal++]=who;
             printf("%d \n",who );
         }while(c=='>');
-        ans= (c=='T') ?1:-1;
+        scanf("%c",&c );
+        if(c=='T'){
+            ans=1;
+        }
+        else if(c=='L'){
+            ans=-1;
+        }
+        else{
+            printf("error\n");
+            break;
+        }
+        //ans = (c=='T') 1:-1;
+        printf("ans=%d\n",ans);
         now=front;
         last=front;
         while(now!=NULL){//刪掉不符合敘述的
-            for(j=0;j<n;j++){//test
-                test *= now->data[j];
+            printf("start to delete-------------------\n");
+            printf("-------------test------------\n");
+            testprintf(front,n);
+            printf("-----------------------------\n");
+            test=1;
+            /*for(j=0;j<n;j++){//test
+                if(whoin[j]){
+                    test *= now->data[j];
+                }
+            }*/
+            for(j=0;j<tatal;j++){//test
+                test *= now->data[narr[j]];
             }
             nowtemp=now;
             now=now->link;
@@ -91,6 +138,9 @@ int main(){
             else{
                 last=nowtemp;//更新上一點
             }
+            printf("-------------after delete test------------\n");
+            testprintf(front,n);
+            printf("-----------------------------\n");
         }//-----------------
     }
     printf("output:");
