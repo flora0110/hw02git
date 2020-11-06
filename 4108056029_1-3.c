@@ -51,18 +51,6 @@ void dfs(int *temp,int i,int count,int n,int m){
         dfs(temp,i+1,count+1,n,m);
     }
 }
-/*void testprintf(listpointer x,int n){
-     int k=0;
-    while(x){
-        int i;
-        printf("list %d\n",k++);
-        for(i=0;i<n;i++){
-            printf("%d \n",x->data[i]);
-        }
-        printf("\n");
-        x=x->link;
-    }
-}*/
 int main(){
     int n,m;
     front=NULL;
@@ -70,9 +58,6 @@ int main(){
     scanf("%d",&m);
     int *temp=(int*)malloc(n*sizeof(int));
     dfs(temp,0,0,n,m);//把可能性弄完
-    /*printf("-------------test------------\n");
-    testprintf(front,n);
-    printf("-----------------------------\n");*/
     int i,j;
     int who,ans=1;//who 說 who ...說ans
     char c;
@@ -85,14 +70,10 @@ int main(){
         for(j=0;j<tatal;j++){//歸零
             narr[j]=0;
         }
-        //printf("narrative : %d\n",i);
         tatal=0;
         do{
-            //printf("read..\n");
             scanf("%d%c",&who,&c);
-            //whoin[who]=1;//這次有在敘述中
             narr[tatal++]=who;
-            //printf("%d \n",who );
         }while(c=='>');
         scanf("%c",&c );
         if(c=='T'){
@@ -105,21 +86,10 @@ int main(){
             printf("error\n");
             break;
         }
-        //ans = (c=='T') 1:-1;
-        //printf("ans=%d\n",ans);
         now=front;
         last=front;
         while(now!=NULL){//刪掉不符合敘述的
-            /*printf("start to delete-------------------\n");
-            printf("-------------test------------\n");
-            testprintf(front,n);
-            printf("-----------------------------\n");*/
             test=1;
-            /*for(j=0;j<n;j++){//test
-                if(whoin[j]){
-                    test *= now->data[j];
-                }
-            }*/
             for(j=0;j<tatal;j++){//test
                 test *= now->data[narr[j]];
             }
@@ -137,9 +107,6 @@ int main(){
             else{
                 last=nowtemp;//更新上一點
             }
-            /*printf("-------------after delete test------------\n");
-            testprintf(front,n);
-            printf("-----------------------------\n");*/
         }//-----------------
     }
     printf("output:");
