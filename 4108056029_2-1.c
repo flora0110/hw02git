@@ -22,9 +22,18 @@ int main(){
     }
     first->pre=plat;
     plat->next=first;
+    FILE* rptr;
+    FILE* wfile;
+    rptr=fopen("test2-1.txt","r");
+    wfile=fopen("output2-1.txt","w");
+    if(rptr==NULL || wfile==NULL){
+        printf("open failure\n");
+        return 1;
+    }
+    else{
     char control;
-    while(control!='\n'){
-        control=getc(stdin);
+    control=fgetc(rptr);
+    while(control!='\n' && control!=EOF){
         switch (control) {
             case '+':
                 first->data = ((first->data)+1)%64 +64;
@@ -44,10 +53,16 @@ int main(){
             case '.':
                 if(first->data==64){
                     printf(" ");
+                    fprintf(wfile," ");
                 }
                 else{
                     printf("%c ",first->data);
+                    fprintf(wfile,"%c ",first->data);
                 }
         }
+        control=fgetc(rptr);
     }
+    }
+    fclose(wfile);
+    fclose(rptr);
 }
