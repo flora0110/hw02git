@@ -7,7 +7,6 @@ typedef struct howto{
 
 int min;
 howto fewstep(int now,int target,int* plat){
-    //printf("now %d target %d\n",now ,target );
     min=-1;
     int i;
     howto ans;
@@ -16,32 +15,24 @@ howto fewstep(int now,int target,int* plat){
     int right,left;
     for(i=0;i<20;i++){
         toplat = i-now;
-        //printf("toplat %d\n",toplat );
         if(target-plat[i]<0){
-            //printf("plat[i] %d\n",plat[i] );
             right = (90-plat[i])+1+target-64;
-            //printf("right %d\n",right);
         }
         else{
             right=target-plat[i];
-            //printf("right %d\n",right);
         }
         if(plat[i]-target<0){
             left = plat[i]-64+1+90-target;
-            //printf("left %d\n",left);
         }
         else{
             left=plat[i]-target;
-            //printf("left %d\n",left);
         }
         tostat= (right<left)? right:-left;
-        //printf("tostat %d\n",tostat);
         sum=abs(tostat)+abs(toplat);
         if(min==-1 || sum<min){
             min=sum;
             ans.toplat=toplat;
             ans.tostat=tostat;
-            //printf("min %d ans %d %d\n",min,ans.toplat, ans.tostat);
         }
     }
     return ans;
@@ -51,9 +42,7 @@ int main(){
     int *plat=malloc(20*sizeof(int));
     for(i=0;i<20;i++){
         plat[i]=64;
-        //printf("plat[i] %d\n",plat[i] );
     }
-    //printf("plat[i] %d\n",plat[0] );
     FILE* rptr;
     FILE* wfile;
     rptr=fopen("test2-2.txt","r");
@@ -99,7 +88,6 @@ int main(){
             fprintf(wfile,".");
             printf(".");
             totalstep++;
-            //printf("\n%c\n",target);
             target=fgetc(rptr);
         }
         printf("\ntotalstep :%d\n",totalstep );
