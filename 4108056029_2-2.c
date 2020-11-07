@@ -1,27 +1,42 @@
+//優化方向 : 加上兩個一起做
+//優化方向(時間) : 超過MIN時就break
 #include <stdio.h>
 #include <stdlib.h>
 typedef struct howto{
-    int toplat;
-    int tostat;
+    int toplat;//如何到那格月台(><)
+    int tostat;////如何到那站(+-)
 }howto;
 
 int min;
-howto fewstep(int now,int target,int* plat){
-    min=-1;
+howto fewstep(int now,int target,int* plat){//回傳到每個站的最快方法(howto)
+    min=-1;//初始化min
     int i;
-    howto ans;
-    int sum;
-    int toplat,tostat;
-    int right,left;
+    howto ans;//要回傳的答案
+    int sum;//目前走法的總步數
+    int toplat,tostat;//目前的走法
+    int right,left;//往右轉和左轉不同
+    int pr,pl;//月台左右轉
     for(i=0;i<20;i++){
-        toplat = i-now;
+        if(i-now<0){
+            pr=i+1+19-now;
+        }
+        else{
+            pr=i-now;
+        }
+        if(now-i<0){
+            pl=i+1+19-now;//向左轉到0再轉一到19,再轉19-now到now
+        }
+        else{
+            pl=now-i;
+        }
+        toplat= (pr<pl)? pr:-pl;//左轉是負的
         if(target-plat[i]<0){
             right = (90-plat[i])+1+target-64;
         }
         else{
             right=target-plat[i];
         }
-        if(plat[i]-target<0){
+        if(plat[i]-target<0){//向左轉到64再轉1到90,再轉90-target到
             left = plat[i]-64+1+90-target;
         }
         else{
@@ -29,7 +44,7 @@ howto fewstep(int now,int target,int* plat){
         }
         tostat= (right<left)? right:-left;
         sum=abs(tostat)+abs(toplat);
-        if(min==-1 || sum<min){
+        if(min==-1 || sum<min){//min還在初始狀態或找到小的
             min=sum;
             ans.toplat=toplat;
             ans.tostat=tostat;

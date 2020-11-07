@@ -56,8 +56,8 @@ int main(){
                         fprintf(wfile," ");
                     }
                     else{
-                        printf("%c ",first->data);
-                        fprintf(wfile,"%c ",first->data);
+                        printf("%c",first->data);
+                        fprintf(wfile,"%c",first->data);
                     }
             }
             control=fgetc(rptr);
