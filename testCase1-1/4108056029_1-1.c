@@ -4,7 +4,7 @@
 #define MAX_QUEUES 15000
 struct TreeNode {
      int data;
-     int n;
+     //int n;
      struct TreeNode* left;
      struct TreeNode* right;
 };
@@ -53,29 +53,29 @@ node* deleteq(){
     return item;
 }
 
-void postorder(node* ptr){
+/*void postorder(node* ptr){
     if(ptr){
         printf("%d\n",ptr->n);
         postorder(ptr->left);
         postorder(ptr->right);
     }
-}
+}*/
 int marknum=0;
 int find(node* ptr){
     //printf("in find\n");
     if(ptr==NULL){//到NULL -5
-        printf("null\n");
+        //printf("null\n");
         //printf("%d arrive 空 \n",ptr->n);
         return -5;
     }
     //printf("in left\n");
     int leftmark=find(ptr->left);
-    printf("%d's left is %d\n",ptr->n,leftmark );
+    //printf("%d's left is %d\n",ptr->n,leftmark );
     //printf("out left\n");
     //printf("in right\n");
     int rightmark=find(ptr->right);
     //printf("%d\n",rightmark );
-    printf("%d's right is %d\n",ptr->n,rightmark );
+    //printf("%d's right is %d\n",ptr->n,rightmark );
     //printf("out right\n");
     if(leftmark==-5 && ptr->left){
         ptr->left=NULL;
@@ -84,38 +84,38 @@ int find(node* ptr){
         ptr->right=NULL;
     }
     if(leftmark==-5 && rightmark==-5){
-        printf("-----------------------------------%d X\n",ptr->n);
+        //printf("-----------------------------------%d X\n",ptr->n);
         ptr->data=-1;
     }
     //檢查左邊
     if(ptr->left){
-        printf("check left\n");
+        //printf("check left\n");
         if(leftmark==-1){//左邊是x
-            printf("-----------------------------------%d #\n",ptr->n);
+            //printf("-----------------------------------%d #\n",ptr->n);
             ptr->data=-2;//標#
             marknum++;
         }
         else if(leftmark==-2){//左邊是#
-            printf("-----------------------------------%d ?\n",ptr->n);
+            //printf("-----------------------------------%d ?\n",ptr->n);
             ptr->data=-3;//標?
             ptr->left=NULL;
         }
     }
     if(ptr->right){
-        printf("check right\n");
+        //printf("check right\n");
         if(rightmark==-1){//右邊是x
             //printf("-----------------------------------%d #\n",ptr->n);
             //ptr->data=-2;//標#
             //marknum++;
             if(leftmark!=-1){//#飆過
-                printf("-----------------------------------%d #\n",ptr->n);
+                //printf("-----------------------------------%d #\n",ptr->n);
                 ptr->data=-2;//標#
                 marknum++;
             }
         }
         else if(rightmark==-2){//右邊是#
             if(leftmark!=-1){//#優先
-                printf("-----------------------------------%d ?\n",ptr->n);
+                //printf("-----------------------------------%d ?\n",ptr->n);
                 ptr->data=-3;//標?
             }
             ptr->right=NULL;
@@ -124,19 +124,19 @@ int find(node* ptr){
     if(ptr->data==-3 && (!ptr->left &&!ptr->right)){//沒有孩子的?要刪掉(視同null)
         ptr->data=-5;
     }
-    printf("ptr->data %d\n",ptr->data);
+    //printf("ptr->data %d\n",ptr->data);
     return ptr->data;
 }
 int main(){
     FILE *rptr;
     FILE *wptr;
-    rptr=fopen("test7.txt","r");
+    rptr=fopen("test3.txt","r");
     if(rptr==NULL){
         printf("ERROR\n");
         return 0;
     }
     else{
-    printf("open!\n" );
+    //printf("open!\n" );
     int i,j;
     char c;
     //node* Root;
@@ -145,7 +145,7 @@ int main(){
     c=fgetc(rptr);
     int n=0;
     //printf("[: %c\n",c);
-    int test=1;
+    //int test=1;
     if(c=='['){//開始建立樹
         //printf("[: %c\n",c);
         c=fgetc(rptr);//抓根
@@ -156,7 +156,7 @@ int main(){
             //struct TreeNode root;
             //printf("??\n");
             root->data=0;
-            root->n=test++;
+            //root->n=test++;
             //printf("ready to addq\n");
             addq(root);
             //printf("out addq\n");
@@ -178,7 +178,7 @@ int main(){
                 //current.left=&newnode;
                 current->left=newnode;
                 newnode->data=0;
-                newnode->n=test++;
+                //newnode->n=test++;
                 newnode->left=NULL;
                 newnode->right=NULL;
                 //printf("root's data %d\n",current.data);
@@ -204,7 +204,7 @@ int main(){
                 newnode->left=NULL;
                 newnode->right=NULL;
                 newnode->data=0;
-                newnode->n=test++;
+                //newnode->n=test++;
                 addq(newnode);
                 n++;
             }
@@ -215,18 +215,18 @@ int main(){
             c=fgetc(rptr);//eat ','or']'
             //printf("root's data %d\n",root->data);
         }//-----------------------------------------------完成樹
-        if(root!=NULL){
+        /*if(root!=NULL){
             printf("root's data %d\n",root->n);
             postorder(root);
-        }
+        }*/
 
-        printf("bulid tree finish\n");
+        //printf("bulid tree finish\n");
     }
     else{//輸入非以[開頭
         printf("input error\n");
     }
     if(root!=NULL){
-        printf("start to find\n");
+        //printf("start to find\n");
         find(root);
         if(root->data>=0 || root->data==-1){
             marknum++;
