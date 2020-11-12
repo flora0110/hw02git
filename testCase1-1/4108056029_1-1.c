@@ -130,7 +130,7 @@ int find(node* ptr){
 int main(){
     FILE *rptr;
     FILE *wptr;
-    rptr=fopen("test3.txt","r");
+    rptr=fopen("test7.txt","r");
     if(rptr==NULL){
         printf("ERROR\n");
         return 0;
@@ -141,15 +141,16 @@ int main(){
     char c;
     //node* Root;
     node* root;
-    root=(node*)malloc(sizeof(node));
+    root=NULL;
     c=fgetc(rptr);
     int n=0;
-    printf("[: %c\n",c);
+    //printf("[: %c\n",c);
     int test=1;
     if(c=='['){//開始建立樹
         //printf("[: %c\n",c);
         c=fgetc(rptr);//抓根
         if(c=='0'){
+            root=(node*)malloc(sizeof(node));
             //printf("root: %c\n",c);
             c=fgetc(rptr);
             //struct TreeNode root;
@@ -214,18 +215,24 @@ int main(){
             c=fgetc(rptr);//eat ','or']'
             //printf("root's data %d\n",root->data);
         }//-----------------------------------------------完成樹
-        printf("root's data %d\n",root->n);
-        postorder(root);
+        if(root!=NULL){
+            printf("root's data %d\n",root->n);
+            postorder(root);
+        }
+
         printf("bulid tree finish\n");
     }
     else{//輸入非以[開頭
         printf("input error\n");
     }
-    printf("start to find\n");
-    find(root);
-    if(root->data>=0){
-        marknum++;
+    if(root!=NULL){
+        printf("start to find\n");
+        find(root);
+        if(root->data>=0 || root->data==-1){
+            marknum++;
+        }
     }
+
     printf("output: %d\n",marknum);
 }
 }
