@@ -51,63 +51,211 @@ node* deleteq(){
     free(temp);
     return item;
 }
-int marknum=0;
-/*int find(node* ptr){
-    if(ptr==NULL){//到NULL -5
-        return -5;
+
+typedef struct element{
+    node* nodepointer;
+    int way;
+}element;
+typedef struct queue2* queuepointer2;
+typedef struct queue2{
+    element e;
+    queuepointer2 link;
+}queue2;
+queuepointer2 front2=NULL,rear2;
+
+element queueEmpty2(){
+    printf("queue is empty\n");
+    element e;
+    e.nodepointer=NULL;
+    e.way=0;
+    return e;
+}
+void addq2(element item){
+    queuepointer2 temp;
+    temp=(queuepointer2)malloc(sizeof(queue2));
+    temp->e=item;
+    temp->link=NULL;
+    if(front2){
+        rear2->link=temp;
     }
-    int leftmark=find(ptr->left);
-    int rightmark=find(ptr->right);
-    if(leftmark==-5 && ptr->left){
-        ptr->left=NULL;
-    }
-    if(rightmark==-5 && ptr->right){
-        ptr->right=NULL;
-    }
-    if(leftmark==-5 && rightmark==-5){
-        ptr->data=-1;
-    }
-    //檢查左邊
-    if(ptr->left){
-        if(leftmark==-1){//左邊是x
-            ptr->data=-2;//標#
-            marknum++;
-        }
-        else if(leftmark==-2){//左邊是#
-            ptr->data=-3;//標?
-            ptr->left=NULL;
-        }
-    }
-    if(ptr->right){
-        if(rightmark==-1){//右邊是x
-            if(leftmark!=-1){//#飆過
-                ptr->data=-2;//標#
-                marknum++;
-            }
-        }
-        else if(rightmark==-2){//右邊是#
-            if(leftmark!=-1){//#優先
-                ptr->data=-3;//標?
-            }
-            ptr->right=NULL;
-        }
-    }
-    if(ptr->data==-3 && (!ptr->left &&!ptr->right)){//沒有孩子的?要刪掉(視同null)
-        ptr->data=-5;
-    }
-    return ptr->data;
-}*/
-void postorder(node* ptr){
-    if(ptr){
-        printf("%d\n",ptr->data);
-        postorder(ptr->left);
-        postorder(ptr->right);
+    else
+        front2=temp;
+    rear2=temp;
+    if(front2==NULL){
+        printf("front is null\n");
     }
 }
+
+element deleteq2(){
+    queuepointer2 temp=front2;
+    element item;
+    if(!temp){
+        return queueEmpty2();
+    }
+    item = temp->e;
+    front2=temp->link;
+    free(temp);
+    return item;
+}
+//--------------------------可能性
+typedef struct List* listpointer;
+typedef struct List{
+    int* data;
+    listpointer link;
+}list;
+listpointer front3,rear3;
+void addq3(int* item){
+    listpointer temp=(listpointer)malloc(sizeof(list));
+    temp->data=item;
+    temp->link=NULL;
+    if(!front3){
+        front3=temp;
+    }
+    else{
+        rear3->link=temp;
+    }
+    rear3=temp;
+}
+int* deleteq3(){
+    listpointer temp=front3;
+    int* item;
+    if(front3){
+        item=front3->data;
+        front3=temp->link;
+        free(temp);
+        return item;
+    }
+}
+int checkn=0;
+void dfs(int *temp,int i){
+    int j;
+    if(i==checkn){
+        int *item=(int*)malloc(checkn*sizeof(int));//小心指標會一起改
+        for(j=0;j<checkn;j++){
+            item[j]=temp[j];
+        }
+        addq3(item);
+        return;
+    }
+    temp[i]=1;
+    dfs(temp,i+1);
+    temp[i]=2;
+    dfs(temp,i+1);
+}
+
+typedef struct imfor{
+    int data;//節點裡的值
+    int mark;//標記
+}imfor;
+int min;
+int numarray[15000];
+int minnum[15000];
+int sum;
+int count=0;
+int mincount;
+queuepointer2 top;
+imfor find (node* ptr,int fatherdata,int firsttime){
+    imfor nowimfor;
+    if(ptr==NULL){
+        nowimfor.data=0;
+        nowimfor.mark=-1;
+        return nowimfor;
+    }
+    nowimfor.data=ptr->data;
+    imfor rightimfor=find(ptr->right,ptr->data,firsttime);
+    imfor leftimfor=find(ptr->left,ptr->data,firsttime);
+    int rightdata=rightimfor.data;
+    int rightmark=rightimfor.mark;
+    int leftdata=leftimfor.data;
+    int leftmark=leftimfor.mark;
+    if(leftmark==-5){
+        ptr->left==NULL;
+        leftmark=-1;
+        leftdata=0;
+    }
+    if(rightmark==-5){
+        ptr->right==NULL;
+        rightmark=-1;
+        rightdata=0;
+    }
+    if(leftmark==-4 &&(rightmark!=-2)){
+        ptr->left==NULL;
+        rightmark=-1;
+        rightdata=0;
+    }
+    if(rightmark==-4&&(leftmark!=-2)){
+        ptr->right==NULL;
+        rightmark=-1;
+        rightdata=0;
+    }
+    if(leftmark==-1 && rightmark==-1){
+        nowimfor.mark=-2;
+    }
+    else if(leftmark==-2 || rightmark==-2){
+        if(ptr->data<(rightdata+leftdata)){
+            nowimfor.mark=-4;
+            numarray[count++]=ptr->data;
+            sum+=ptr->data;
+        }
+        else if(ptr->data>(rightdata+leftdata+fatherdata)){
+            if(rightmark!=-1){
+                sum+=rightdata;
+                numarray[count++]=rightdata;
+            }
+            if(leftmark!=-1){
+                sum+=leftdata;
+                numarray[count++]=leftdata;
+            }
+            nowimfor.mark=-5;
+        }
+        else{
+            int way=1;
+            if(firsttime){
+                element e;
+                e.nodepointer=ptr;
+                e.way=1;
+                addq2(e);
+                count++;
+            }
+            else{
+                //queuepointer2 qp=front2;
+                //while (qp) {
+                    if(top->e.nodepointer==ptr){
+                        way=top->e.way;
+                        top=top->link;
+                        //break;
+                    }
+                    //qp=qp->link;
+                //}
+            }
+            if(way==1){
+                nowimfor.mark=-4;
+                numarray[count++]=ptr->data;
+                sum+=ptr->data;
+            }
+            else if(way==2){
+                if(rightmark!=-1){
+                    sum+=rightdata;
+                    numarray[count++]=rightdata;
+                }
+                if(leftmark!=-1){
+                    sum+=leftdata;
+                    numarray[count++]=leftdata;
+                }
+                nowimfor.mark=-5;
+            }
+        }
+
+
+    }
+
+    return nowimfor;
+}
+
 int main(){
     FILE *rptr;
     FILE *wptr;
-    rptr=fopen("test2.txt","r");
+    rptr=fopen("test1.txt","r");
     if(rptr==NULL){
         printf("ERROR\n");
         return 0;
@@ -194,14 +342,37 @@ int main(){
         else{//輸入非以[開頭
             printf("input error\n");
         }
-        printf("bulid tree finish\n");
-        postorder(root);
-        /*if(root!=NULL){
-            //find(root);
-            if(root->data>=0 || root->data==-1){
-                marknum++;
+        if(root!=NULL){
+            find(root,0,1);
+            int *temp=(int*)malloc(count*sizeof(int));
+            dfs(temp,0);//把可能性弄完
+            min=sum;
+            int *check;
+            //int minnum[100];
+            mincount=count;
+            while(front3){
+                count=0;
+                check=deleteq3();
+                queuepointer2 nptr=front2;
+                for(i=0;i<checkn;i++){
+                    nptr->e.way=check[i];
+                    nptr=nptr->link;
+                }
+                top=front2;
+                find(root,0,0);
+                if(sum<min){
+                    memcpy(minnum,numarray,sizeof(num));
+                    /*for(i=0;i<count;i++){
+                        minnum[i]=num[i];
+                    }*/
+                    min=sum;
+                    mincount=count;
+                }
             }
         }
-        printf("output: %d\n",marknum);*/
+        printf("output: %d\n",sum);
+        for(i=0;i<mincount;i++){
+            printf("%d \n",minnum[i]);
+        }
     }
 }
