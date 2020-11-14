@@ -103,7 +103,7 @@ typedef struct List{
     int* data;
     listpointer link;
 }list;
-listpointer front3,rear3;
+listpointer front3=NULL,rear3;
 void addq3(int* item){
     listpointer temp=(listpointer)malloc(sizeof(list));
     temp->data=item;
@@ -126,7 +126,7 @@ int* deleteq3(){
         return item;
     }
 }
-int checkn=0;
+int checkn=0;//需要check 的點
 void dfs(int *temp,int i){
     int j;
     if(i==checkn){
@@ -150,72 +150,85 @@ typedef struct imfor{
 int min;
 int numarray[15000];
 int minnum[15000];
-int sum;
+int sum=0;
 int count=0;
 int mincount;
 queuepointer2 top;
 imfor find (node* ptr,int fatherdata,int firsttime){
+    //printf("in find\n");
     imfor nowimfor;
     if(ptr==NULL){
+        printf("null\n");
         nowimfor.data=0;
         nowimfor.mark=-1;
         return nowimfor;
     }
+    printf("------------ptr->data %d\n",ptr->data);
     nowimfor.data=ptr->data;
-    imfor rightimfor=find(ptr->right,ptr->data,firsttime);
     imfor leftimfor=find(ptr->left,ptr->data,firsttime);
+    imfor rightimfor=find(ptr->right,ptr->data,firsttime);
     int rightdata=rightimfor.data;
     int rightmark=rightimfor.mark;
     int leftdata=leftimfor.data;
     int leftmark=leftimfor.mark;
-    if(leftmark==-5){
+    printf("leftmark: %d    rightmark: %d\n",leftmark,rightmark );
+    if(leftmark==-5 || leftmark==-6){
         ptr->left==NULL;
         leftmark=-1;
         leftdata=0;
     }
-    if(rightmark==-5){
+    if(rightmark==-5 || rightmark==-6){
         ptr->right==NULL;
         rightmark=-1;
         rightdata=0;
     }
-    if(leftmark==-4 &&(rightmark!=-2)){
+    if(leftmark==-4 || rightmark==-4){
+        nowimfor.mark=-6;
         ptr->left==NULL;
-        rightmark=-1;
-        rightdata=0;
+        leftmark=-1;
+        leftdata=0;
     }
-    if(rightmark==-4&&(leftmark!=-2)){
-        ptr->right==NULL;
-        rightmark=-1;
-        rightdata=0;
-    }
+    printf("leftmark: %d    rightmark: %d\n",leftmark,rightmark );
     if(leftmark==-1 && rightmark==-1){
+        printf("-------------------%d is x\n",ptr->data);
         nowimfor.mark=-2;
     }
     else if(leftmark==-2 || rightmark==-2){
         if(ptr->data<(rightdata+leftdata)){
+            printf("------------------------%d is case -4\n",ptr->data);
             nowimfor.mark=-4;
             numarray[count++]=ptr->data;
             sum+=ptr->data;
+            printf("numarray[%d] %d\n",count-1, numarray[count-1]);
         }
         else if(ptr->data>(rightdata+leftdata+fatherdata)){
-            if(rightmark!=-1){
-                sum+=rightdata;
-                numarray[count++]=rightdata;
-            }
-            if(leftmark!=-1){
+            printf("------------------------%d is case -5\n",ptr->data);
+            if(leftmark==-2){
                 sum+=leftdata;
+                //printf("count %d\n",count );
                 numarray[count++]=leftdata;
+                //printf("left %d\n",leftdata );
+                printf("numarray[%d] %d\n",count-1, numarray[count-1]);
             }
+            if(rightmark==-2){
+                sum+=rightdata;
+                //printf("count %d\n",count);
+                numarray[count++]=rightdata;
+                //printf("right %d\n",rightdata);
+                printf("numarray[%d] %d\n",count-1, numarray[count-1]);
+            }
+            printf("sum: %d\n",sum );
             nowimfor.mark=-5;
         }
         else{
+            printf("else\n");
             int way=1;
             if(firsttime){
                 element e;
                 e.nodepointer=ptr;
                 e.way=1;
                 addq2(e);
-                count++;
+                checkn++;
             }
             else{
                 //queuepointer2 qp=front2;
@@ -229,33 +242,47 @@ imfor find (node* ptr,int fatherdata,int firsttime){
                 //}
             }
             if(way==1){
+                printf("\nway 1\n");
+                printf("-------------------%d is case -4\n",ptr->data);
+                printf("count %d\n",count);
                 nowimfor.mark=-4;
                 numarray[count++]=ptr->data;
                 sum+=ptr->data;
+                printf("numarray[%d] %d\n",count-1, numarray[count-1]);
             }
             else if(way==2){
-                if(rightmark!=-1){
-                    sum+=rightdata;
-                    numarray[count++]=rightdata;
-                }
-                if(leftmark!=-1){
+                printf("\nway 2\n");
+                printf("-------------------%d is case -5\n",ptr->data);
+                if(leftmark==-2){
+                    printf("inright\n");
                     sum+=leftdata;
                     numarray[count++]=leftdata;
+                    printf("numarray[%d] %d\n",count-1, numarray[count-1]);
+                }
+                if(rightmark==-2){
+                    printf("inleft\n");
+                    sum+=rightdata;
+                    numarray[count++]=rightdata;
+                    printf("numarray[%d] %d\n",count-1, numarray[count-1]);
                 }
                 nowimfor.mark=-5;
             }
         }
-
-
     }
-
+    printf("finish------------ptr->data %d %d\n",ptr->data,nowimfor.mark);
     return nowimfor;
 }
-
+void postorder(node* ptr){
+    if(ptr){
+        printf("%d\n",ptr->data);
+        postorder(ptr->left);
+        postorder(ptr->right);
+    }
+}
 int main(){
     FILE *rptr;
     FILE *wptr;
-    rptr=fopen("test1.txt","r");
+    rptr=fopen("test2.txt","r");
     if(rptr==NULL){
         printf("ERROR\n");
         return 0;
@@ -343,34 +370,74 @@ int main(){
             printf("input error\n");
         }
         if(root!=NULL){
-            find(root,0,1);
+            printf("----------test-----------\n");
+            postorder(root);
+            imfor rootim =find(root,0,1);
             int *temp=(int*)malloc(count*sizeof(int));
-            dfs(temp,0);//把可能性弄完
+            if(front2){
+                dfs(temp,0);//把可能性弄完
+            }
+            //dfs(temp,0);//把可能性弄完
             min=sum;
             int *check;
+            //memcpy(minnum,numarray,sizeof(num));
             //int minnum[100];
+            for(i=0;i<count;i++){
+                minnum[i]=numarray[i];
+            }
             mincount=count;
+            if(rootim.mark==-2 ){
+                numarray[count++]=root->data;
+                sum+=root->data;
+                printf("numarray[%d] %d\n",count-1, numarray[count-1]);
+            }
+            printf("-----------minnum----------######################\n");
+            for(i=0;i<mincount;i++){
+                printf("%d \n",minnum[i]);
+            }
+            printf("---------------------------\n");
             while(front3){
+                printf("in while\n");
                 count=0;
                 check=deleteq3();
+                sum=0;
                 queuepointer2 nptr=front2;
                 for(i=0;i<checkn;i++){
                     nptr->e.way=check[i];
                     nptr=nptr->link;
                 }
                 top=front2;
-                find(root,0,0);
+                rootim = find(root,0,0);
+                printf("rootim.mark %d\n",rootim.mark);
+                printf("root data %d\n",root->data );
+                if(rootim.mark==-2 ){
+                    numarray[count++]=root->data;
+                    sum+=root->data;
+                    printf("numarray[%d] %d\n",count-1, numarray[count-1]);
+                }
+                printf("-----------numarray----------######################\n");
+                for(i=0;i<count;i++){
+                    printf("%d \n",numarray[i]);
+                }
+                printf("---------------------------\n");
+
                 if(sum<min){
-                    memcpy(minnum,numarray,sizeof(num));
-                    /*for(i=0;i<count;i++){
-                        minnum[i]=num[i];
-                    }*/
+                    //memcpy(minnum,numarray,sizeof(num));
+                    for(i=0;i<count;i++){
+                        minnum[i]=numarray[i];
+                        printf("%d \n",minnum[i]);
+                    }
                     min=sum;
                     mincount=count;
+                    printf("-----------minnum----------######################\n");
+                    for(i=0;i<mincount;i++){
+                        printf("%d \n",minnum[i]);
+                    }
+                    printf("---------------------------\n");
                 }
             }
         }
-        printf("output: %d\n",sum);
+        printf("output: %d\n",min);
         for(i=0;i<mincount;i++){
             printf("%d \n",minnum[i]);
         }
