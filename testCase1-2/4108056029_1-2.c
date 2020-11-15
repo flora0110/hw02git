@@ -2,6 +2,12 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#define MALLOC(p,s)\
+    if(!((p)=malloc(s))){\
+        fprintf(stderr,"Insufficient memory");\
+        printf("out\n");\
+        exit(EXIT_FAILURE);\
+    }
 #define MAX_QUEUES 15000
 struct TreeNode {
      int data;
@@ -97,7 +103,6 @@ element deleteq2(){
     free(temp);
     return item;
 }
-//--------------------------可能性
 typedef struct List* listpointer;
 typedef struct List{
     int* data;
@@ -126,27 +131,6 @@ int* deleteq3(){
         return item;
     }
 }
-int testn=0;
-int checkn=0;//需要check 的點
-void dfs(int *temp,int i){
-    int j;
-    if(i==checkn){
-        int *item=(int*)malloc(checkn*sizeof(int));//小心指標會一起改
-        for(j=0;j<checkn;j++){
-            item[j]=temp[j];
-        }
-        addq3(item);
-        testn++;
-        //-----------------------------------
-        
-        //----------------------------------
-        return;
-    }
-    temp[i]=1;
-    dfs(temp,i+1);
-    temp[i]=2;
-    dfs(temp,i+1);
-}
 
 typedef struct imfor{
     int data;//節點裡的值
@@ -158,6 +142,7 @@ int minnum[15000];
 int sum=0;
 int count=0;
 int mincount;
+int checkn=0;//需要check 的點
 queuepointer2 top;
 imfor find (node* ptr,int fatherdata,int firsttime){
     //printf("in find\n");
@@ -170,31 +155,35 @@ imfor find (node* ptr,int fatherdata,int firsttime){
     }
     //printf("------------ptr->data %d\n",ptr->data);
     nowimfor.data=ptr->data;
+    nowimfor.mark=0;
     imfor leftimfor=find(ptr->left,ptr->data,firsttime);
     imfor rightimfor=find(ptr->right,ptr->data,firsttime);
     int rightdata=rightimfor.data;
     int rightmark=rightimfor.mark;
     int leftdata=leftimfor.data;
     int leftmark=leftimfor.mark;
-    //printf("leftmark: %d    rightmark: %d\n",leftmark,rightmark );
+    //printf("ptr->data %d leftmark: %d    rightmark: %d\n",ptr->data,leftmark,rightmark );
+    if(leftmark==-4){
+        nowimfor.mark=-6;
+        leftmark=-1;
+        leftdata=0;
+    }
+    if(rightmark==-4){
+        nowimfor.mark=-6;
+        rightmark=-1;
+        rightdata=0;
+    }
     if(leftmark==-5 || leftmark==-6){
-        ptr->left==NULL;
         leftmark=-1;
         leftdata=0;
     }
     if(rightmark==-5 || rightmark==-6){
-        ptr->right==NULL;
         rightmark=-1;
         rightdata=0;
     }
-    if(leftmark==-4 || rightmark==-4){
-        nowimfor.mark=-6;
-        ptr->left==NULL;
-        leftmark=-1;
-        leftdata=0;
-    }
+    //printf("\nnowmark %d\n",nowimfor.mark );
     //printf("leftmark: %d    rightmark: %d\n",leftmark,rightmark );
-    if(leftmark==-1 && rightmark==-1){
+    if(leftmark==-1 && rightmark==-1 && nowimfor.mark!=-6){
         //printf("-------------------%d is x\n",ptr->data);
         nowimfor.mark=-2;
     }
@@ -277,6 +266,58 @@ imfor find (node* ptr,int fatherdata,int firsttime){
     //printf("finish------------ptr->data %d %d\n",ptr->data,nowimfor.mark);
     return nowimfor;
 }
+//--------------------------可能性
+int testn=0;
+node *root;
+void dfs(int *temp,int i){
+    int j;
+    if(i==checkn){
+        //int *item;
+        //int *item=(int*)malloc(checkn*sizeof(int));//小心指標會一起改
+        //MALLOC(item,checkn*sizeof(int));
+        /*for(j=0;j<checkn;j++){
+            item[j]=temp[j];
+        }*/
+        //addq3(item);
+        testn++;
+        printf("%d\n",testn );
+        //-----------------------------------
+        count=0;
+        sum=0;
+        queuepointer2 nptr=front2;
+        for(i=0;i<checkn;i++){
+            nptr->e.way=temp[i];
+            nptr=nptr->link;
+        }
+        top=front2;
+        imfor rootim = find(root,0,0);
+        //printf("rootim %d\n",rootim.mark );
+        if(rootim.mark==-2 ){
+            printf("\n");
+            numarray[count++]=root->data;
+            sum+=root->data;
+        }
+        /*printf("-----------numarray----------######################\n");
+        for(i=0;i<count;i++){
+            printf("%d \n",numarray[i]);
+        }
+        printf("---------------------------\n");*/
+        if(sum<min){
+            for(i=0;i<count;i++){
+                minnum[i]=numarray[i];
+            }
+            min=sum;
+            mincount=count;
+        }
+        //----------------------------------
+        return;
+    }
+    temp[i]=1;
+    dfs(temp,i+1);
+    temp[i]=2;
+    dfs(temp,i+1);
+}
+
 void postorder(node* ptr){
     if(ptr){
         printf("%d\n",ptr->data);
@@ -287,7 +328,7 @@ void postorder(node* ptr){
 int main(){
     FILE *rptr;
     FILE *wptr;
-    rptr=fopen("test3.txt","r");
+    rptr=fopen("test4.txt","r");
     if(rptr==NULL){
         printf("ERROR\n");
         return 0;
@@ -295,7 +336,7 @@ int main(){
     else{
         int i,j;
         char c;
-        node* root;
+        //node* root;
         root=NULL;
         c=fgetc(rptr);
         char str[100];
@@ -378,32 +419,33 @@ int main(){
             printf("----------test-----------\n");
             //postorder(root);
             //printf("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n");
-            imfor rootim =find(root,0,1);
-            printf("checkn %d\n",checkn );
-            int *temp=(int*)malloc(count*sizeof(int));
-            if(front2){
-                dfs(temp,0);//把可能性弄完
-            }
-            printf("$%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%testn %d checkn %d\n",testn,checkn );
-            //dfs(temp,0);//把可能性弄完
-            min=sum;
-            int *check;
-            //memcpy(minnum,numarray,sizeof(num));
-            //int minnum[100];
-            for(i=0;i<count;i++){
-                minnum[i]=numarray[i];
-            }
-            mincount=count;
+            imfor rootim =find(root,0,1);//第一次
+            printf("checkn %d\n",checkn );//需要檢查的點
             if(rootim.mark==-2 ){
                 numarray[count++]=root->data;
                 sum+=root->data;
                 printf("numarray[%d] %d\n",count-1, numarray[count-1]);
             }
+
+            min=sum;//初始化min
+            for(i=0;i<count;i++){
+                minnum[i]=numarray[i];
+            }
+            mincount=count;
             printf("-----------minnum----------######################\n");
             for(i=0;i<mincount;i++){
                 printf("%d \n",minnum[i]);
             }
             printf("---------------------------\n");
+
+            int *temp=(int*)malloc(count*sizeof(int));
+            if(front2){//queue2存要處理的點
+                dfs(temp,0);//把可能性弄完
+            }
+            printf("$%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%testn %d checkn %d\n",testn,checkn );
+            //dfs(temp,0);//把可能性弄完
+            //int *check;//
+            /*
             while(front3){
                 //printf("in while\n");
                 count=0;
@@ -424,11 +466,10 @@ int main(){
                     //printf("numarray[%d] %d\n",count-1, numarray[count-1]);
                 }
                 //printf("-----------numarray----------######################\n");
-                /*for(i=0;i<count;i++){
-                    printf("%d \n",numarray[i]);
-                }
-                printf("---------------------------\n");
-                */
+                //for(i=0;i<count;i++){
+                //    printf("%d \n",numarray[i]);
+                //}
+                //printf("---------------------------\n");
                 if(sum<min){
                     //memcpy(minnum,numarray,sizeof(num));
                     for(i=0;i<count;i++){
@@ -437,13 +478,14 @@ int main(){
                     }
                     min=sum;
                     mincount=count;
-                    /*printf("-----------minnum----------######################\n");
-                    for(i=0;i<mincount;i++){
-                        printf("%d \n",minnum[i]);
-                    }
-                    printf("---------------------------\n");*/
+                    //printf("-----------minnum----------######################\n");
+                    //for(i=0;i<mincount;i++){
+                    //    printf("%d \n",minnum[i]);
+                    //}
+                    //printf("---------------------------\n");
                 }
             }
+            */
         }
         printf("output: %d\n",min);
         for(i=0;i<mincount;i++){
