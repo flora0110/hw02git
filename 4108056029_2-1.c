@@ -24,7 +24,7 @@ int main(){
     plat->next=first;
     FILE* rptr;
     FILE* wfile;
-    rptr=fopen("test2-1.txt","r");
+    rptr=fopen("test2-1.txt","r");//testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest
     wfile=fopen("output2-1.txt","w");
     if(rptr==NULL || wfile==NULL){
         printf("open failure\n");

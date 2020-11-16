@@ -99,7 +99,7 @@ int find(node* ptr){
 int main(){
     FILE *rptr;
     FILE *wptr;
-    rptr=fopen("test3.txt","r");
+    rptr=fopen("test3.txt","r");//testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest
     if(rptr==NULL){
         printf("ERROR\n");
         return 0;

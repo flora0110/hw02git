@@ -193,7 +193,7 @@ int main(){
     }
     FILE* rptr;
     FILE* wfile;
-    rptr=fopen("test2-2.txt","r");
+    rptr=fopen("test2-2.txt","r");//testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest
     wfile=fopen("output2-2.txt","w");
     if(rptr==NULL || wfile==NULL){
         printf("open failure\n");
@@ -220,7 +220,7 @@ int main(){
         while(target!='\n' && target!=EOF){
             if(target==' '){
                 target='@';
-                printf("\n\n" );
+                //printf("\n\n" );
             }
             ans=fewstep(now,target,plat);
             now+=ans.toplat;
@@ -250,7 +250,7 @@ int main(){
             //printf(".");
             command[j1++]='.';
             totalstep++;
-            printf("totalstep %d\n",totalstep);
+            //printf("totalstep %d\n",totalstep);
             if(count==1){
                 lasttarget=target;
                 count++;
@@ -262,65 +262,65 @@ int main(){
                 plat2[now2]=lasttarget;
                 for(i=0;i<abs(ans2.toplat);i++){
                     if(ans2.toplat>0){
-                        printf(">");
+                        //printf(">");
                         command2[j2++]='>';
                     }
                     else{
-                        printf("<");
+                        //printf("<");
                         command2[j2++]='<';
                     }
                     totalstep2++;
                 }
                 for(i=0;i<abs(ans2.tostat);i++){
                     if(ans2.tostat>0){
-                        printf("+");
+                        //printf("+");
                         command2[j2++]='+';
                     }
                     else{
-                        printf("-");
+                        //printf("-");
                         command2[j2++]='-';
                     }
                     totalstep2++;
                 }
-                printf(".");
-                printf(" %d %c\n",now2,lasttarget );
+                //printf(".");
+                //printf(" %d %c\n",now2,lasttarget );
                 command2[j2++]='.';
                 totalstep2++;
                 now2+=ans2.toplat2;
                 plat2[now2]=target;
                 for(i=0;i<abs(ans2.toplat2);i++){
                     if(ans2.toplat2>0){
-                        printf(">");
+                        //printf(">");
                         command2[j2++]='>';
                     }
                     else{
-                        printf("<");
+                        //printf("<");
                         command2[j2++]='<';
                     }
                     totalstep2++;
                 }
                 for(i=0;i<abs(ans2.tostat2);i++){
                     if(ans2.tostat2>0){
-                        printf("+");
+                        //printf("+");
                         command2[j2++]='+';
                     }
                     else{
-                        printf("-");
+                        //printf("-");
                         command2[j2++]='-';
                     }
                     totalstep2++;
                 }
-                printf(".");
+                //printf(".");
                 command2[j2++]='.';
                 totalstep2++;
-                printf(" %d %c\n",now2,target );
-                printf("\n--- totalstep2 %d---\n",totalstep2 );
+                //printf(" %d %c\n",now2,target );
+                //printf("\n--- totalstep2 %d---\n",totalstep2 );
             }
 
             target=fgetc(rptr);
         }
         if(count==2){
-            printf("odd\n");
+            //printf("odd\n");
             ans=fewstep(now2,target,plat2);
             now2+=ans.toplat;
             plat2[now2]=target;
